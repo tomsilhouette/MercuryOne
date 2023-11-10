@@ -36,7 +36,7 @@ steps:
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
-    version: '5.x' # or the appropriate version
+    version: '7.x' # or the appropriate version
     installationPath: $(Agent.ToolsDirectory)/dotnet
 
 - script: dotnet test --collect:"XPlat Code Coverage" --logger:trx
