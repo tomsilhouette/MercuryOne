@@ -32,3 +32,19 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '5.x' # or the appropriate version
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+- script: dotnet test --collect:"XPlat Code Coverage" --logger:trx
+  displayName: 'Run Tests with Code Coverage'
+
+- script: reportgenerator -reports:$(Agent.TempDirectory)/*/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:Cobertura
+  displayName: 'Generate Code Coverage Report'
+
+- publish: $(Build.SourcesDirectory)/CodeCoverage
+  artifact: CodeCoverage
+  displayName: 'Publish Code Coverage Report'
